@@ -3,8 +3,12 @@ from PIL import Image
 import numpy as np
 import colorsys
 import os
+import random
 
 FULL_NAME = ""
+
+def selectRandomFile(dir):
+    return random.choice(os.listdir(dir))
 
 def hueChange(img, hue, brightness, saturation):
     # It's better to raise an exception than silently return None if img is not
@@ -92,15 +96,27 @@ if sixthName == 1:
 print("")
 print(FULL_NAME)
 
-filename = 'Images/HUE/ore.png'
+#FOREGROUND
+
+filename = 'elementOverlays/HUE/ore.png'
 basename, ext = os.path.splitext(filename)
 img = Image.open(filename).convert('RGBA')
 hue = 125
 brightness = 0
 saturation = -100/100
-img2 = hueChange(img, hue, brightness, saturation)
+overlay_IMG = hueChange(img, hue, brightness, saturation)
 out = '{}_hue{:03d}.png'.format(basename,hue)
-img2.save(out)
+overlay_IMG.save(out)
+
+# BACKGROUND
+
+filename = selectRandomFile("elementUnderlays/")
+underlay_IMG = Image.open("elementUnderlays/" + filename)
+underlay_width, underlay_height = underlay_IMG.size
+overlay_width, overlay_height = overlay_IMG.size
+offset = (int(round((underlay_width - overlay_width) / 2)), int(round((underlay_height - overlay_height) / 2)))
+underlay_IMG.paste(overlay_IMG, offset)
+underlay_IMG.save("PURE_ELEMENT.png")
 
 fn.close()
 sn.close()
