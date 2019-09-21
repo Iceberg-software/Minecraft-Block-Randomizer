@@ -1,13 +1,55 @@
 import random
 from PIL import Image
 import numpy as np
+import colorsys
+import os
 
 FULL_NAME = ""
 
-def colorMask(im):
-    im = im.convert('RGBA')
+def hueChange(img, hue, brightness, saturation):
+    # It's better to raise an exception than silently return None if img is not
+    # an Image.
+    img.load()
+    r, g, b, a = img.split()
+    r_data = []
+    g_data = []
+    b_data = []
+    a_data = []
 
-    for i, pixel in enumerate()
+    width, heigth = img.size
+
+    sat_avg = 0
+    brg_avg = 0
+    pixels = 0
+
+    for x in range(width):
+        for y in range(heigth):
+            r,g,b,a = img.getpixel((x,y))
+            if a == 255:
+                pixels = pixels + 1
+                h,s,v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
+                sat_avg += s + saturation
+                brg_avg += v + brightness
+                rgb = colorsys.hsv_to_rgb(hue/360, max(min(s + saturation, 1), 0), max(min(v + brightness, 1), 0))
+                r, g, b = [int(x*255.) for x in rgb]
+                img.putpixel((x,y),(r,g,b))
+    print("Average saturation: {} : Average brightness: {}".format(max(min((sat_avg/pixels)*100, 100), 0), max(min((sat_avg/pixels)*100, 100), 0)))
+
+    return(img)
+
+    #for rd, gr, bl, al in zip(r.getdata(), g.getdata(), b.getdata(), a.getdata()):
+    #    if al == 255:
+    #        h, s, v = colorsys.rgb_to_hsv(rd / 255., bl / 255., gr / 255.) 
+    #        rgb = colorsys.hsv_to_rgb(hue/360., s, v)
+    #        rd, gr, bl = [int(x*255.) for x in rgb]
+    #        r_data.append(rd)
+    #        g_data.append(gr)
+    #        b_data.append(bl)
+
+    #r.putdata(r_data)
+    #g.putdata(g_data)
+    #b.putdata(b_data)
+
 
 def fileLen(fname):
     with open(fname) as f:
@@ -50,8 +92,15 @@ if sixthName == 1:
 print("")
 print(FULL_NAME)
 
-ore = Image.open('Images/ore.png')
-colorMask(ore)
+filename = 'Images/HUE/ore.png'
+basename, ext = os.path.splitext(filename)
+img = Image.open(filename).convert('RGBA')
+hue = 125
+brightness = 0
+saturation = -100/100
+img2 = hueChange(img, hue, brightness, saturation)
+out = '{}_hue{:03d}.png'.format(basename,hue)
+img2.save(out)
 
 fn.close()
 sn.close()
