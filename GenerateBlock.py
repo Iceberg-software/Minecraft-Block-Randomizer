@@ -6,7 +6,9 @@ import os
 import random
 import progressbar
 from titlecase import titlecase
-from pixels import axe_pixels, sword_pixels, pickaxe_pixels, hoe_pixels, shovel_pixels
+from settings import axe_pixels, sword_pixels, pickaxe_pixels, hoe_pixels, shovel_pixels
+from settings import sword_enchantments, tool_enchantments, bow_enchantments, crossbow_enchantments, armor_enchantments, boot_enchantments, helmet_enchantments
+from settings import materials
 
 def selectRandomFile(dir):
     return random.choice(os.listdir(dir))
@@ -127,11 +129,48 @@ def writeJavaItemImports(file):
     file.write("net.minecraft.item.Item; \n")
 
 def CreateNewContent(amount):
+    ## SETTINGS ##
+    # ORE
+    ORE_Y_LEVEL_MIN = random.randint(0,30)
+    ORE_Y_LEVEL_MAX = random.randint(45,75)
+    ORE_DROP_COUNT = random.randint(1,6)
+    ORE_MINE_LEVEL = random.choice(materials())
+
+    # ITEM
+    ITEM_DUNGEON = random.choice((True,False))
+    ITEM_TEMPLE = random.choice((True,False))
+    ITEM_STRONGHOLD = random.choice((True,False))
+    ITEM_MINESHAFT = random.choice((True,False))
+    ITEM_VILLAGE = random.choice((True,False))
+    ITEM_MANSION = random.choice((True,False))
+    ITEM_END_CITY = random.choice((True,False))
+    ITEM_END_SHIP = random.choice((True,False))
+
+    # CRAFTING
+    CRAFTING_ARMOR = random.choice((True,False))
+    CRAFTING_TOOLS = random.choice((True,False))
+    CRAFTING_WEAPONS = random.choice((True,False))
+    CRAFTING_TORCH = random.choice((True,False))
+    CRAFTING_BLOCK = random.choice((True,False))
+
+    # USE
+    USE_FUEL = random.choice((True,False))
+    USE_FOOD = random.choice((True,False))
+    
+    ## POPERTIES ##
+    # WEAPON
+    if CRAFTING_WEAPONS:
+        USE_DURABILITY = random.choice(materials())
+        USE_DAMAGE = random.randint(1,20)
+        USE_ATTACK_EFFECT = ""
+        USE_ENCHANTMENT = random.choices(sword_enchantments(random.choice(("UNDER_POWERED", "NORMAL", "OVER_POWERED"))))
+    
+    
     names = []
     for i in progressbar.progressbar(range(amount)):
-        fn = open("firstNames.txt")
-        sn = open("secondNames.txt")
-        ln = open("lastNames.txt")
+        fn = open("elementInfo/firstNames.txt")
+        sn = open("elementInfo/secondNames.txt")
+        ln = open("elementInfo/lastNames.txt")
 
         FULL_NAME = ""
 
@@ -149,19 +188,19 @@ def CreateNewContent(amount):
         sixthName = random.randint(0,1)
 
         if firstName == 1:
-            FULL_NAME += firstNames[random.randint(0,fileLen("firstNames.txt"))].replace("\n", "")
+            FULL_NAME += firstNames[random.randint(0,fileLen("elementInfo/firstNames.txt"))].replace("\n", "")
 
-        FULL_NAME += secondNames[random.randint(0,fileLen("secondNames.txt"))].replace("\n", "")
-        FULL_NAME += firstNames[random.randint(0,fileLen("firstNames.txt"))].replace("\n", "")
+        FULL_NAME += secondNames[random.randint(0,fileLen("elementInfo/secondNames.txt"))].replace("\n", "")
+        FULL_NAME += firstNames[random.randint(0,fileLen("elementInfo/firstNames.txt"))].replace("\n", "")
 
         if fourthName == 1:
-            FULL_NAME += secondNames[random.randint(0,fileLen("secondNames.txt"))].replace("\n", "")
+            FULL_NAME += secondNames[random.randint(0,fileLen("elementInfo/secondNames.txt"))].replace("\n", "")
 
         if fifthName == 1:
-            FULL_NAME += firstNames[random.randint(0,fileLen("firstNames.txt"))].replace("\n", "")
+            FULL_NAME += firstNames[random.randint(0,fileLen("elementInfo/firstNames.txt"))].replace("\n", "")
 
         if sixthName == 1:
-            FULL_NAME += lastNames[random.randint(0,fileLen("lastNames.txt"))].replace("\n", "")
+            FULL_NAME += lastNames[random.randint(0,fileLen("elementInfo/lastNames.txt"))].replace("\n", "")
 
         #print("")
         #print(FULL_NAME)
@@ -175,7 +214,8 @@ def CreateNewContent(amount):
 
         if os.path.isdir("Complete/{}".format(FULL_NAME)):
             continue
-
+        if not os.path.isdir("Complete"):
+            os.mkdir("Complete")
         if not os.path.isdir("Complete/Code"):
             os.mkdir("Complete/Code")
         if not os.path.isdir("Complete/Code/lang"):
