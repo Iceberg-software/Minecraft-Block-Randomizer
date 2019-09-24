@@ -6,9 +6,7 @@ import os
 import random
 import progressbar
 from titlecase import titlecase
-from settings import axe_pixels, sword_pixels, pickaxe_pixels, hoe_pixels, shovel_pixels
-from settings import sword_enchantments, tool_enchantments, bow_enchantments, crossbow_enchantments, armor_enchantments, boot_enchantments, helmet_enchantments
-from settings import materials
+import settings
 
 def selectRandomFile(dir):
     return random.choice(os.listdir(dir))
@@ -26,7 +24,7 @@ def hueChange(filename, img, hue, brightness, saturation):
             for y in range(heigth):
                 r,g,b,a = img.getpixel((x,y))
                 if a == 255:
-                    if not (x,y) in pickaxe_pixels():
+                    if not (x,y) in settings.pickaxe_pixels():
                         pixels = pixels + 1
                         h,s,v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
                         sat_avg += s + saturation
@@ -40,7 +38,7 @@ def hueChange(filename, img, hue, brightness, saturation):
             for y in range(heigth):
                 r,g,b,a = img.getpixel((x,y))
                 if a == 255:
-                    if not (x,y) in sword_pixels():
+                    if not (x,y) in settings.sword_pixels():
                         pixels = pixels + 1
                         h,s,v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
                         sat_avg += s + saturation
@@ -54,7 +52,7 @@ def hueChange(filename, img, hue, brightness, saturation):
             for y in range(heigth):
                 r,g,b,a = img.getpixel((x,y))
                 if a == 255:
-                    if not (x,y) in shovel_pixels():
+                    if not (x,y) in settings.shovel_pixels():
                         pixels = pixels + 1
                         h,s,v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
                         sat_avg += s + saturation
@@ -68,7 +66,7 @@ def hueChange(filename, img, hue, brightness, saturation):
             for y in range(heigth):
                 r,g,b,a = img.getpixel((x,y))
                 if a == 255:
-                    if not (x,y) in hoe_pixels():
+                    if not (x,y) in settings.hoe_pixels():
                         pixels = pixels + 1
                         h,s,v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
                         sat_avg += s + saturation
@@ -82,7 +80,7 @@ def hueChange(filename, img, hue, brightness, saturation):
             for y in range(heigth):
                 r,g,b,a = img.getpixel((x,y))
                 if a == 255:
-                    if not (x,y) in axe_pixels():
+                    if not (x,y) in settings.axe_pixels():
                         pixels = pixels + 1
                         h,s,v = colorsys.rgb_to_hsv(r/255, g/255, b/255)
                         sat_avg += s + saturation
@@ -129,45 +127,52 @@ def writeJavaItemImports(file):
     file.write("net.minecraft.item.Item; \n")
 
 def CreateNewContent(amount):
-    ## SETTINGS ##
-    # ORE
-    ORE_Y_LEVEL_MIN = random.randint(0,30)
-    ORE_Y_LEVEL_MAX = random.randint(45,75)
-    ORE_DROP_COUNT = random.randint(1,6)
-    ORE_MINE_LEVEL = random.choice(materials())
-
-    # ITEM
-    ITEM_DUNGEON = random.choice((True,False))
-    ITEM_TEMPLE = random.choice((True,False))
-    ITEM_STRONGHOLD = random.choice((True,False))
-    ITEM_MINESHAFT = random.choice((True,False))
-    ITEM_VILLAGE = random.choice((True,False))
-    ITEM_MANSION = random.choice((True,False))
-    ITEM_END_CITY = random.choice((True,False))
-    ITEM_END_SHIP = random.choice((True,False))
-
-    # CRAFTING
-    CRAFTING_ARMOR = random.choice((True,False))
-    CRAFTING_TOOLS = random.choice((True,False))
-    CRAFTING_WEAPONS = random.choice((True,False))
-    CRAFTING_TORCH = random.choice((True,False))
-    CRAFTING_BLOCK = random.choice((True,False))
-
-    # USE
-    USE_FUEL = random.choice((True,False))
-    USE_FOOD = random.choice((True,False))
-    
-    ## POPERTIES ##
-    # WEAPON
-    if CRAFTING_WEAPONS:
-        USE_DURABILITY = random.choice(materials())
-        USE_DAMAGE = random.randint(1,20)
-        USE_ATTACK_EFFECT = ""
-        USE_ENCHANTMENT = random.choices(sword_enchantments(random.choice(("UNDER_POWERED", "NORMAL", "OVER_POWERED"))))
-    
     
     names = []
     for i in progressbar.progressbar(range(amount)):
+        ## SETTINGS ##
+        # ORE
+        ORE_Y_LEVEL_MIN = random.randint(0,30)
+        ORE_Y_LEVEL_MAX = random.randint(45,75)
+        ORE_MINE_LEVEL = random.choice(settings.materials())
+        ORE_SMELTABLE = random.choice((True,False))
+        if ORE_SMELTABLE:
+            ORE_DROP_COUNT = random.randint(1,2)
+        else:
+            ORE_DROP_COUNT = random.randint(1,6)
+
+        # ITEM
+        ITEM_DUNGEON = random.choice((True,False))
+        ITEM_TEMPLE = random.choice((True,False))
+        ITEM_STRONGHOLD = random.choice((True,False))
+        ITEM_MINESHAFT = random.choice((True,False))
+        ITEM_VILLAGE = random.choice((True,False))
+        ITEM_MANSION = random.choice((True,False))
+        ITEM_END_CITY = random.choice((True,False))
+        ITEM_END_SHIP = random.choice((True,False))
+
+        # CRAFTING
+        CRAFTING_ARMOR = random.choice((True,False))
+        CRAFTING_TOOLS = random.choice((True,False))
+        CRAFTING_WEAPONS = random.choice((True,False))
+        CRAFTING_TORCH = random.choice((True,False))
+        CRAFTING_BLOCK = random.choice((True,False))
+
+        # USE
+        USE_FUEL = random.choice((True,False))
+        USE_FOOD = random.choice((True,False))
+        
+        ## POPERTIES ##
+        # WEAPON
+        if CRAFTING_WEAPONS:
+            USE_DURABILITY = random.choice(settings.materials())
+            USE_DAMAGE = random.randint(1,20)
+            USE_ATTACK_EFFECT_NPC = random.choices(settings.effects("ATTACK"), k=random.randint(0,3))
+            USE_ATTACK_EFFECT_PLAYER = random.choices(settings.effects("ATTACK"), k=random.randint(0,3))
+            USE_HOLDING_EFFECT = random.choices(settings.effects("PASSIVE"), k=random.randint(0,3))
+            USE_ENCHANTMENT = random.choices(settings.sword_enchantments(random.choice(("UNDER_POWERED", "NORMAL", "OVER_POWERED"))), k=random.randint(0,3))
+        
+        
         fn = open("elementInfo/firstNames.txt")
         sn = open("elementInfo/secondNames.txt")
         ln = open("elementInfo/lastNames.txt")
@@ -223,7 +228,9 @@ def CreateNewContent(amount):
         if not os.path.isdir("Complete/Code/java"):
             os.mkdir("Complete/Code/java")
         os.mkdir("Complete/{}".format(FULL_NAME))
-        os.mkdir("Complete/{}/Tools".format(FULL_NAME))
+        os.mkdir("Complete/{}/Crafting".format(FULL_NAME))
+        os.mkdir("Complete/{}/Crafting/Block".format(FULL_NAME))
+        os.mkdir("Complete/{}/Crafting/Tools".format(FULL_NAME))
         os.mkdir("Complete/{}/Element".format(FULL_NAME))
         os.mkdir("Complete/{}/Block".format(FULL_NAME))
         os.mkdir("Complete/{}/Code".format(FULL_NAME))
@@ -234,6 +241,30 @@ def CreateNewContent(amount):
         os.mkdir("Complete/{}/Code/textures".format(FULL_NAME))
         os.mkdir("Complete/{}/Code/loot_tables".format(FULL_NAME))
         os.mkdir("Complete/{}/Code/java".format(FULL_NAME))
+
+        config = open("Complete/{}/config.cfg".format(FULL_NAME), "w+")
+
+        config.write("//ORE// \n")
+        config.write("Spawn level: y{} - y{} \n".format(ORE_Y_LEVEL_MIN, ORE_Y_LEVEL_MAX))
+        config.write("Mining level: {} \n".format(ORE_MINE_LEVEL))
+        config.write("Smeltable: {}, drop count: {} \n\n".format(ORE_SMELTABLE, ORE_DROP_COUNT))
+
+        config.write("//ITEM// \n")
+        config.write("Spawn places: \nDungeon: {} \nTemple: {} \nStonghold: {} \nMineshaft: {} \nVillage: {} \nMansion: {} \nEnd City: {} \nEnd Ship: {} \n".format(ITEM_DUNGEON, ITEM_TEMPLE, ITEM_STRONGHOLD, ITEM_MINESHAFT, ITEM_VILLAGE, ITEM_MANSION, ITEM_END_CITY, ITEM_END_SHIP))
+        config.write("Crafting: \nArmor: {} \nTools: {} \nWeapons: {} \nTorch: {} \nBlock: {} \n\n".format(CRAFTING_ARMOR, CRAFTING_TOOLS, CRAFTING_WEAPONS, CRAFTING_TORCH, CRAFTING_BLOCK))
+        
+        config.write("//USE// \n")
+        config.write("FUEL: {} \n".format(USE_FUEL))
+        config.write("FOOD: {} \n\n".format(USE_FOOD))
+
+        if CRAFTING_WEAPONS:
+            config.write("//SWORD// \n")
+            config.write("Durability: {} \n".format(USE_DURABILITY))
+            config.write("Damage: {} \n".format(USE_DAMAGE))
+            config.write("Attack Effect on NPC: {} \n".format(USE_ATTACK_EFFECT_NPC))
+            config.write("Attack Effect on Player: {} \n".format(USE_ATTACK_EFFECT_PLAYER))
+            config.write("Idle Effect: {} \n".format(USE_HOLDING_EFFECT))
+            config.write("Enchantments: {} \n".format(USE_ENCHANTMENT))
 
         # IMAGE SETTINGS
         hue = random.randint(1,360)
@@ -249,9 +280,6 @@ def CreateNewContent(amount):
         # BACKGROUND
         filename = "elementUnderlays/" + selectRandomFile("elementUnderlays/")
         underlay_IMG = Image.open(filename)
-        underlay_width, underlay_height = underlay_IMG.size
-        overlay_width, overlay_height = overlay_IMG.size
-        offset = (int(round((underlay_width - overlay_width) / 2)), int(round((underlay_height - overlay_height) / 2)))
         underlay_IMG.paste(overlay_IMG,(0,0), overlay_IMG)
         underlay_IMG.save("Complete/{}/Block/{}.png".format(FULL_NAME, FULL_NAME),"PNG")
         underlay_IMG.save("Complete/{}/Code/textures/{}.png".format(FULL_NAME, ore),"PNG")
@@ -266,11 +294,20 @@ def CreateNewContent(amount):
         item.save("Complete/{}/Code/textures/{}.png".format(FULL_NAME, RAW))
 
         #TOOLS
-        for filename in os.listdir("elementItems/Tools/"):
-            item = Image.open("elementItems/Tools/" + filename).convert('RGBA')
-            item = hueChange(filename, item, hue, brightness, saturation)
-            out = 'Complete/{}/Tools/{}_{}.png'.format(FULL_NAME, FULL_NAME, filename.split('.')[0])
-            item.save(out)
+        if CRAFTING_TOOLS:
+            for filename in os.listdir("elementItems/Tools/"):
+                item = Image.open("elementItems/Tools/" + filename).convert('RGBA')
+                item = hueChange(filename, item, hue, brightness, saturation)
+                out = 'Complete/{}/Crafting/Tools/{}_{}.png'.format(FULL_NAME, FULL_NAME, filename.split('.')[0])
+                item.save(out)
+
+        #BLOCK
+        if CRAFTING_BLOCK:
+            filename = "elementItems/Block/" + selectRandomFile("elementItems/Block/")
+            block = Image.open(filename)
+            block = hueChange(filename, block, hue, brightness, saturation)
+            out = 'Complete/{}/Crafting/Block/{}_block.png'.format(FULL_NAME, RAW)
+            block.save(out)
 
         blockstates = open("Complete/{}/Code/blockstates/{}.json".format(FULL_NAME,ore), "w+")
         lang = open("Complete/Code/lang/{}.json".format("en_US"), "a+")
@@ -356,3 +393,4 @@ def CreateNewContent(amount):
     print("Generated content: {} blocks".format(len(names)))
     for name in names:
         print(name)
+CreateNewContent(10)

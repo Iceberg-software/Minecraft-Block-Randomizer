@@ -100,3 +100,9 @@ def boot_enchantments(power):
 
 def materials():
     return(("WOOD", "STONE", "IRON", "DIAMOND"))
+
+def effects(action):
+    if action == "PASSIVE":
+        return(("Speed", "Slowness", "Haste", "Mining Fatigue", "Strength", "Jump Boost", "Nausea", "Regeneration", "Resistance", "Fire Resistance", "Water Breathing", "Invisibility", "Blindness", "Night Vision", "Hunger", "Weakness", "Poison", "Wither", "Health Boost", "Absorption", "Glowing", "Levitation", "Fatal Poison", "Luck", "Bad Luck", "Slow Falling", "Conduit Power", "Dolphin's Grace", "Bad Omen", "Hero of the Village"))
+    if action == "ATTACK":
+        return(("Speed", "Slowness", "Haste", "Mining Fatigue", "Strength", "Jump Boost", "Nausea", "Regeneration", "Resistance", "Fire Resistance", "Water Breathing", "Invisibility", "Blindness", "Night Vision", "Hunger", "Weakness", "Poison", "Wither", "Health Boost", "Absorption", "Glowing", "Levitation", "Fatal Poison", "Luck", "Bad Luck", "Slow Falling", "Conduit Power", "Dolphin's Grace", "Bad Omen", "Hero of the Village", "Instant Health", "Instant Damage", "Saturation"))
